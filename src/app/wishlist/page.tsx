@@ -21,7 +21,6 @@ export default function WishlistPage() {
     await removeFromWishlist(id);
     setItems(x => x.filter(i => i._id !== id));
   };
-
   return (
     <section className="container py-10">
       <div className="mb-6 flex items-center justify-between">
