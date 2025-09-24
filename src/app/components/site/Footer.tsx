@@ -1,4 +1,3 @@
-// src app components site => Footer.tsx
 import Link from "next/link";
 import Image from "next/image";
 import QRCode from "react-qr-code";
@@ -7,7 +6,6 @@ const ANDROID_URL = "https://play.google.com/store/apps/details?id=com.example.a
 const IOS_URL = "https://apps.apple.com/app/id000000000";
 const QR_TARGET = ANDROID_URL;
 
-/* icons */
 function IconArrowRight(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>

@@ -1,4 +1,3 @@
-
 import { api } from "./api";
 export type ShippingAddress = { details: string; phone: string; city: string };
 

@@ -1,5 +1,3 @@
-//src app lib => brands-api.ts
-
 import { api } from "./api";
 export type Brand = { _id: string; name: string; image?: string };
 type BRes = { data: Brand[] } | { results?: number; data: Brand[] } | Brand[];

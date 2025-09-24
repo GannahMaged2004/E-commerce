@@ -1,4 +1,3 @@
-//src app components => CategoryPill.tsx
 "use client";
 import Link from "next/link";
 

@@ -13,13 +13,12 @@ import {
   type CartRes,
 } from "@/app/lib/cart-api";
 
-/* ---------- SAFE NUM HELPERS ---------- */
 const num = (v: any, d = 0) => {
   const n = Number(v);
   return Number.isFinite(n) ? n : d;
 };
 
-// derive unit price robustly even if backend sends strings/missing fields
+
 const unitPriceOf = (it: CartItem) => {
   const unitFromProduct = num(it?.product?.price);
   if (unitFromProduct) return unitFromProduct;
@@ -31,7 +30,6 @@ const unitPriceOf = (it: CartItem) => {
   return 0;
 };
 
-// robust line total (prefers explicit line price if valid)
 const lineTotalOf = (it: CartItem) => {
   const direct = num((it as any)?.price);
   if (direct) return direct;
@@ -84,8 +82,6 @@ export default function CartPage() {
     const next = clamp(nextCount, 1, 99);
     const unit = unitPriceOf(it);
     const patchedLine = unit * next;
-
-    // optimistic
     setBusyIds((b) => ({ ...b, [it._id]: true }));
     setQtyDraft((d) => ({ ...d, [it._id]: next }));
     setCart((c) =>
@@ -110,7 +106,7 @@ export default function CartPage() {
       setCart(fresh);
       syncDraftsFrom(fresh);
     } catch (e) {
-      await load(); // rollback if API failed
+      await load();
       alert((e as any)?.message || "Failed to update item.");
     } finally {
       setBusyIds((b) => ({ ...b, [it._id]: false }));
@@ -119,8 +115,6 @@ export default function CartPage() {
 
   const remove = async (it: CartItem) => {
     setBusyIds((b) => ({ ...b, [it._id]: true }));
-
-    // optimistic remove
     setCart((c) =>
       c && {
         ...c,
@@ -133,7 +127,6 @@ export default function CartPage() {
     );
 
     try {
-      // Product-first strict delete (no silent restore)
       const fresh = await removeCartItemStrict(it.product._id, it._id);
 
       const stillThere = !!fresh?.data?.products?.some(
@@ -141,13 +134,11 @@ export default function CartPage() {
       );
 
       if (stillThere) {
-        // try the alternate id explicitly once more
         const alt = await removeCartItemStrict(it._id, it.product._id);
         const stillThereAlt = !!alt?.data?.products?.some(
           (p) => p._id === it._id || p.product?._id === it.product._id
         );
         if (stillThereAlt) {
-          // keep optimistic removal but warn
           alert(
             "The server responded with a cart that still includes the item. Confirm your DELETE route expects productId vs lineId."
           );
@@ -164,14 +155,13 @@ export default function CartPage() {
         return nd;
       });
     } catch (e: any) {
-      await load(); // rollback
+      await load();
       alert(e?.message || "Failed to remove item.");
     } finally {
       setBusyIds((b) => ({ ...b, [it._id]: false }));
     }
   };
 
-  /* ---------- clear cart ---------- */
   const clearCart = async () => {
     if (clearingRef.current || !items.length) return;
     if (!confirm("Clear all items from cart?")) return;
@@ -183,14 +173,13 @@ export default function CartPage() {
       await apiClearCart();
       setQtyDraft({});
     } catch (e) {
-      setCart(prev ?? null); // rollback
+      setCart(prev ?? null); 
       alert((e as any)?.message || "Failed to clear cart.");
     } finally {
       clearingRef.current = false;
     }
   };
 
-  /* ---------- coupons ---------- */
   const apply = async () => {
     if (applyingRef.current) return;
     const code = coupon.trim();
@@ -208,8 +197,6 @@ export default function CartPage() {
       applyingRef.current = false;
     }
   };
-
-  /* ---------- UI ---------- */
   if (loading) {
     return (
       <section className="container py-10">

@@ -1,5 +1,4 @@
 import { api } from "./api";
-
 export type CartItem = {
   _id: string; 
   product: { _id: string; title: string; imageCover: string; price: number };
@@ -105,4 +104,3 @@ export function applyCoupon(coupon: string) {
     auth: true,
   });
 }
-

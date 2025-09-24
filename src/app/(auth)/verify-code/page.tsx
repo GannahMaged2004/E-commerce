@@ -1,4 +1,3 @@
-// src/app/(auth)/verify-code/page.tsx
 "use client";
 
 import { FormEvent, useState } from "react";

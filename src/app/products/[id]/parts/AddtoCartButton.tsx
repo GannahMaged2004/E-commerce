@@ -1,4 +1,3 @@
-//src app products [id] => AddtoCartButton.tsx
 "use client";
 
 import { useTransition } from "react";

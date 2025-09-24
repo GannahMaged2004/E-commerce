@@ -1,4 +1,3 @@
-//src app contact => page.tsx
 import Link from "next/link";
 
 function PhoneIcon(props: React.SVGProps<SVGSVGElement>) {

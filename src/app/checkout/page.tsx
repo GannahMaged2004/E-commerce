@@ -1,4 +1,3 @@
-// src/app/checkout/page.tsx
 "use client";
 
 import { useEffect, useMemo, useState, FormEvent } from "react";
@@ -35,7 +34,7 @@ export default function CheckoutPage() {
   const total = useMemo(() => cart?.data?.totalCartPrice ?? 0, [cart]);
 
   if (loading) {
-    return <section className="container py-10">Loading…</section>;
+    return <section className="container py-10">Loading ⟳</section>;
   }
 
   if (err) {
@@ -63,10 +62,8 @@ export default function CheckoutPage() {
     if (!cart?.data?._id) return;
     setPlacing(true);
     try {
-      // Backend usually expects { shippingAddress: { details, phone, city } }
       await createCashOrder(cart.data._id, addr);
       alert("Order placed ✅");
-      // optional: you might want /orders instead of home
       location.href = "/orders";
     } catch (e: any) {
       alert(e?.message || "Could not place order");
@@ -121,7 +118,7 @@ export default function CheckoutPage() {
             disabled={placing}
             className="rounded bg-neutral-900 px-5 py-3 text-white hover:bg-neutral-700 disabled:opacity-60"
           >
-            {placing ? "Placing…" : "Place Cash Order"}
+            {placing ? "Placing ⟳" : "Place Cash Order"}
           </button>
           <button
             type="button"
@@ -129,7 +126,7 @@ export default function CheckoutPage() {
             disabled={redirecting}
             className="rounded border px-5 py-3 disabled:opacity-60"
           >
-            {redirecting ? "Redirecting…" : "Pay with Card"}
+            {redirecting ? "Redirecting ⟳" : "Pay with Card"}
           </button>
           <Link
             href="/cart"

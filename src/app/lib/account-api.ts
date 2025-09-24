@@ -1,4 +1,3 @@
-//src app lib => account-api.ts
 import { api } from "./api";
 
 type User = {

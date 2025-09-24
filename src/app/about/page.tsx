@@ -162,7 +162,6 @@ export default function AboutPage() {
 
       <section className="container pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          {/* left text */}
           <div>
             <h1 className="text-4xl font-semibold text-neutral-900 tracking-wide">Our Story</h1>
             <div className="mt-6 space-y-5 text-neutral-500 leading-7">

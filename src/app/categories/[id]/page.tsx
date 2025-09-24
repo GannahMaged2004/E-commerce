@@ -34,8 +34,6 @@ export async function getProducts(params: { page?: number; limit?: number; keywo
 
   return fetchProducts(`?${sp.toString()}`);
 }
-
-
 export async function getFlashSales(limit = 6) { return (await fetchProducts(`?limit=${limit}&sort=-createdAt`)).products; }
 export async function getBestSelling(limit = 8) { return (await fetchProducts(`?limit=${limit}&sort=-ratingsAverage,-createdAt`)).products; }
 export async function getExplore(limit = 8, page = 1) { return (await fetchProducts(`?limit=${limit}&page=${page}`)).products; }

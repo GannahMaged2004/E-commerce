@@ -204,19 +204,19 @@ export default async function HomePage() {
 
       <section className="container mx-auto px-3 sm:px-4 lg:px-6 mt-16 sm:mt-20 grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-3">
         <div className="rounded-md border border-neutral-100 bg-white p-5 sm:p-6 text-center">
-          <div className="text-xl sm:text-2xl">🚚</div>
+          <div className="text-xl sm:text-2xl">⛟</div>
           <div className="mt-2 font-semibold text-sm sm:text-base">FREE AND FAST DELIVERY</div>
           <div className="text-xs sm:text-sm text-neutral-500">
             Free delivery for all orders over $140
           </div>
         </div>
         <div className="rounded-md border border-neutral-100 bg-white p-5 sm:p-6 text-center">
-          <div className="text-xl sm:text-2xl">💬</div>
+          <div className="text-xl sm:text-2xl">🎧</div>
           <div className="mt-2 font-semibold text-sm sm:text-base">24/7 CUSTOMER SERVICE</div>
           <div className="text-xs sm:text-sm text-neutral-500">Friendly 24/7 customer support</div>
         </div>
         <div className="rounded-md border border-neutral-100 bg-white p-5 sm:p-6 text-center">
-          <div className="text-xl sm:text-2xl">🔒</div>
+          <div className="text-xl sm:text-2xl">✔</div>
           <div className="mt-2 font-semibold text-sm sm:text-base">MONEY BACK GUARANTEE</div>
           <div className="text-xs sm:text-sm text-neutral-500">
             We return money within 30 days

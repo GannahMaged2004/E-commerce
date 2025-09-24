@@ -1,5 +1,3 @@
-//src app products [id] => WishlistButton.tsx
-
 "use client";
 
 import { useState, useTransition } from "react";

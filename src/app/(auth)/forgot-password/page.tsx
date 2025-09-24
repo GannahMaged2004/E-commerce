@@ -1,4 +1,3 @@
-// src app (auth) forgot-password => page.tsx
 "use client";
 import Image from "next/image";
 import Link from "next/link";

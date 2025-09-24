@@ -1,5 +1,3 @@
-//src app lib => auth.ts
-
 export function saveAuth(token: string, user?: any) {
   localStorage.setItem("token", token);
   if (user) localStorage.setItem("user", JSON.stringify(user));

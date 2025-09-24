@@ -1,4 +1,3 @@
-//src app components => ProductCard.tsx
 "use client";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,7 +30,6 @@ export default function ProductCard({ p }: { p: Product }) {
     try {
       setAdding(true);
       await addToCart(p._id);
-      // optional: toast
     } catch (e: any) {
       alert(e?.message || "Could not add to cart");
     } finally {

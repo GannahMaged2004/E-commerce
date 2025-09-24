@@ -1,5 +1,3 @@
-// src app (auth) register => page.tsx
-
 "use client";
 
 import Image from "next/image";

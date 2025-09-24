@@ -1,5 +1,3 @@
-//src app lib => wishlist-api.ts
-
 import { api } from "./api";
 export type WishlistRes = { data: Array<{ _id: string }> };
 

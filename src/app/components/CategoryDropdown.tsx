@@ -1,4 +1,3 @@
-//src app components => CategoryDropdown.tsx
 "use client";
 
 import { useEffect, useState } from "react";
