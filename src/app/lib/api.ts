@@ -1,0 +1,42 @@
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE!; // https://ecommerce.routemisr.com
+
+function getToken() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("token");
+}
+
+export function setToken(token: string | null) {
+  if (typeof window === "undefined") return;
+  if (token) localStorage.setItem("token", token);
+  else localStorage.removeItem("token");
+}
+
+export async function api<T>(
+  path: string,
+  opts: RequestInit & { auth?: boolean } = {}
+): Promise<T> {
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    ...(opts.headers || {}),
+  };
+
+  if (opts.auth) {
+    const token = getToken();
+    if (token) {
+      (headers as any).Authorization = `Bearer ${token}`;
+      (headers as any).token = token;
+    }
+  }
+
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  const url = `${API_BASE}${normalized}`;
+
+  const res = await fetch(url, { ...opts, headers });
+  const json = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    const message = json?.message || json?.errors?.msg || "Request failed";
+    throw new Error(message);
+  }
+  return json as T;
+}
