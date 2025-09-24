@@ -41,45 +41,46 @@ export default function AccountPage() {
     })();
   }, []);
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSaving(true);
-    try {
-      await updateMe({
-        name: `${firstName} ${lastName}`.trim(),
-        email,
-        address,
-      });
+const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setSaving(true);
+  try {
+    // build profile payload only with non-empty changes
+    const payload: { name?: string; email?: string; phone?: string } = {};
+    const name = `${firstName} ${lastName}`.trim();
+    if (name) payload.name = name;
+    if (email) payload.email = email;
 
-      const wantsPasswordChange =
-        currentPassword.length > 0 ||
-        newPassword.length > 0 ||
-        confirmNewPassword.length > 0;
-
-      if (wantsPasswordChange) {
-        if (newPassword !== confirmNewPassword) {
-          throw new Error("New passwords do not match.");
-        }
-        await changeMyPassword({
-          currentPassword,
-          password: newPassword,
-          passwordConfirm: confirmNewPassword,
-        });
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmNewPassword("");
-      }
-
-      const newName = `${firstName} ${lastName}`.trim();
-      if (newName) setDisplayName(newName);
-
-      alert("Saved successfully!");
-    } catch (err: any) {
-      alert(err?.message || "Save failed");
-    } finally {
-      setSaving(false);
+    if (Object.keys(payload).length) {
+      await updateMe(payload); // 👈 send only fields the API accepts
     }
-  };
+    const wants = !!(currentPassword || newPassword || confirmNewPassword);
+    if (wants) {
+      if (!currentPassword || !newPassword || !confirmNewPassword) {
+        throw new Error("Please fill current, new, and confirm password to change it.");
+      }
+      if (newPassword !== confirmNewPassword) {
+        throw new Error("New passwords do not match.");
+      }
+      await changeMyPassword({
+        currentPassword,
+        password: newPassword,
+        passwordConfirm: confirmNewPassword,
+      });
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+    }
+
+    if (name) setDisplayName(name);
+    alert("Saved successfully!");
+  } catch (err: any) {
+    alert(err?.message || "Save failed");
+  } finally {
+    setSaving(false);
+  }
+};
+
 
   return (
     <>

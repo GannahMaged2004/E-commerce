@@ -1,5 +1,4 @@
-export const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE!;
 
 function getToken() {
   if (typeof window === "undefined") return null;
@@ -25,7 +24,7 @@ export async function api<T>(
     const token = getToken();
     if (token) {
       headers.Authorization = `Bearer ${token}`;
-      (headers as any).token = token;
+      (headers as any).token = token; 
     }
   }
 

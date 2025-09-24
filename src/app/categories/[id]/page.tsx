@@ -39,3 +39,5 @@ export async function getBestSelling(limit = 8) { return (await fetchProducts(`?
 export async function getExplore(limit = 8, page = 1) { return (await fetchProducts(`?limit=${limit}&page=${page}`)).products; }
 export async function getNewArrival(limit = 4) { return (await fetchProducts(`?limit=${limit}&sort=-createdAt`)).products; }
 export async function getProductById(id: string) { return api<{ data: Product }>(`/api/v1/products/${id}`).then((r) => r.data); }
+
+
