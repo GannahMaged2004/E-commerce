@@ -1,4 +1,6 @@
+
 import { api } from "./api";
+
 export type Product = {
   _id: string;
   title: string;
@@ -15,51 +17,73 @@ type ListRes = {
   data?: Product[];
   products?: Product[];
   pagination?: { numberOfPages?: number };
-};
+  metadata?: { numberOfPages?: number }; 
+} & any;
 
-async function fetchProducts(qs: string) {
-  const r = await api<ListRes>(`/api/v1/products${qs}`);
-  return {
-    products: (r.data ?? r.products ?? []) as Product[],
-    results: r.results,
-    pagination: r.pagination,
-  };
+function pickProducts(r: ListRes) {
+  const products = (r?.data ?? r?.products ?? []) as Product[];
+  const results = r?.results ?? products.length;
+  const pagination = r?.pagination ?? r?.metadata ?? undefined;
+  return { products, results, pagination };
 }
 
+
 export async function getProducts({
-  page = 1, limit = 12, keyword = "", category = "", sort = "-createdAt",
-}: { page?: number; limit?: number; keyword?: string; category?: string; sort?: string }) {
-  const qs = new URLSearchParams();
-  qs.set("page", String(page));
-  qs.set("limit", String(limit));
-  if (keyword)  qs.set("keyword", keyword);
-  if (category) qs.set("category", category);
-  if (sort)     qs.set("sort", sort);
-  return api<{ products: Product[]; results?: number; pagination?: { numberOfPages?: number } }>(
-    `/api/v1/products?${qs.toString()}`
-  );
+  page = 1,
+  limit = 12,
+  keyword = "",
+  category = "",
+  sort = "-createdAt",
+}: {
+  page?: number;
+  limit?: number;
+  keyword?: string;  
+  category?: string; 
+  sort?: string;
+}) {
+  const qs = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+    sort,
+    ...(keyword && { keyword }),
+    ...(category && { category }),
+  }).toString();
+
+  const res = await api<ListRes>(`/api/v1/products?${qs}`);
+  return pickProducts(res);
 }
 
 export async function getAllProducts() {
-  const first = await api<any>("/api/v1/products?limit=60&page=1&sort=-createdAt");
-  const firstBatch = (first?.data ?? first?.products ?? []) as Product[];
-  const totalPages =
-    first?.metadata?.numberOfPages ??
-    first?.pagination?.numberOfPages ??
-    1;
+  const first = await api<ListRes>("/api/v1/products?limit=60&page=1&sort=-createdAt");
+  const { products: firstBatch, pagination } = pickProducts(first);
+  const totalPages = pagination?.numberOfPages ?? 1;
   if (totalPages <= 1) return firstBatch;
-  const restPages = await Promise.all(
+
+  const rest = await Promise.all(
     Array.from({ length: totalPages - 1 }, (_, i) =>
-      api<any>(`/api/v1/products?limit=60&page=${i + 2}&sort=-createdAt`)
+      api<ListRes>(`/api/v1/products?limit=60&page=${i + 2}&sort=-createdAt`)
     )
   );
-  const rest = restPages.flatMap((p) => (p?.data ?? p?.products ?? []) as Product[]);
-  return [...firstBatch, ...rest];
+
+  return firstBatch.concat(...rest.map(p => pickProducts(p).products));
 }
 
+export async function getFlashSales(limit = 6) {
+  return (await getProducts({ limit, sort: "-createdAt" })).products;
+}
+export async function getBestSelling(limit = 8) {
+  return (await getProducts({ limit, sort: "-ratingsAverage,-createdAt" })).products;
+}
+export async function getExplore(limit = 8, page = 1) {
+  return (await getProducts({ limit, page, sort: "-createdAt" })).products;
+}
+export async function getNewArrival(limit = 4) {
+  return (await getProducts({ limit, sort: "-createdAt" })).products;
+}
 
-export async function getFlashSales(limit = 6) { return (await fetchProducts(`?limit=${limit}&sort=-createdAt`)).products; }
-export async function getBestSelling(limit = 8) { return (await fetchProducts(`?limit=${limit}&sort=-ratingsAverage,-createdAt`)).products; }
-export async function getExplore(limit = 8, page = 1) { return (await fetchProducts(`?limit=${limit}&page=${page}`)).products; }
-export async function getNewArrival(limit = 4) { return (await fetchProducts(`?limit=${limit}&sort=-createdAt`)).products; }
-export async function getProductById(id: string) { return api<{ data: Product }>(`/api/v1/products/${id}`).then((r) => r.data); }
+export async function getProductById(id: string) {
+  const r = await api<{ data?: Product; product?: Product }>(`/api/v1/products/${id}`);
+  const product = r.data ?? r.product;
+  if (!product) throw new Error("Product not found");
+  return product;
+}

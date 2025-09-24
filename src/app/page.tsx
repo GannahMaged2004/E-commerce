@@ -72,10 +72,10 @@ export default async function HomePage() {
             <h3 className="text-lg sm:text-xl font-semibold text-neutral-800">Flash Sales</h3>
           </div>
           <Link
-            href="/products/all"
+            href="/products?view=flash"
             className="rounded bg-red-600 px-3 py-2 text-xs sm:text-sm text-white"
           >
-            View All Products
+            View All
           </Link>
         </div>
 
@@ -111,7 +111,7 @@ export default async function HomePage() {
             </h3>
           </div>
           <Link
-            href="/products/all"
+            href="/products?view=best"
             className="rounded bg-red-600 px-3 py-2 text-xs sm:text-sm text-white"
           >
             View All
@@ -166,7 +166,7 @@ export default async function HomePage() {
 
         <div className="mt-6 text-center">
           <Link
-            href="/products"
+            href="/products?view=explore"
             className="inline-block rounded bg-red-600 px-5 sm:px-6 py-2 text-xs sm:text-sm text-white"
           >
             View All Products

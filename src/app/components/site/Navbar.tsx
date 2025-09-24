@@ -70,14 +70,13 @@ export default function Navbar() {
   const [isAuthed, setIsAuthed] = useState(false);
 
 
-  const [q, setQ] = useState("");
-
-  const onSearch = (e: FormEvent) => {
-    e.preventDefault();
-    const term = q.trim();
-    router.push(term ? `/products?keyword=${encodeURIComponent(term)}` : "/products");
-    setOpen(false); 
-  };
+const [q, setQ] = useState("");
+const onSearch = (e: FormEvent) => {
+  e.preventDefault();
+  const term = q.trim();
+  router.push(term ? `/products?keyword=${encodeURIComponent(term)}` : "/products");
+  setOpen(false);
+};
 
 
   useEffect(() => {
