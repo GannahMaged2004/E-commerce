@@ -1,5 +1,3 @@
-//src app lib => catalog-api.ts
-
 import { api } from "./api";
 
 export const getProducts = (query = "") =>

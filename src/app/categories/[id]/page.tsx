@@ -17,7 +17,6 @@ type ListRes = {
   pagination?: { numberOfPages?: number };
 };
 
-// internal
 async function fetchProducts(qs: string) {
   const r = await api<ListRes>(`/api/v1/products${qs}`);
   return {

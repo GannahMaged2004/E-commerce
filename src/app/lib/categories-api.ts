@@ -1,4 +1,3 @@
-// src/app/lib/categories-api.ts
 import { api } from "./api";
 
 export type Category = { _id: string; name: string; image?: string };

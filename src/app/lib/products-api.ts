@@ -1,6 +1,4 @@
-
 import { api } from "./api";
-
 export type Product = {
   _id: string;
   title: string;

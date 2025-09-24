@@ -1,4 +1,3 @@
-//src app wishlist => page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -35,7 +34,7 @@ export default function WishlistPage() {
               setItems([]);
             }}
           >
-            Move All To Bag
+            Move All To Cart
           </button>
         )}
       </div>
@@ -65,13 +64,10 @@ export default function WishlistPage() {
           ))}
         </div>
       )}
-
-      {/* “Just for you” (re-use your Explore grid) */}
       <div className="mt-12 flex items-center gap-2">
         <span className="inline-block h-6 w-1 rounded bg-red-600" />
         <h2 className="text-lg font-semibold">Just For You</h2>
       </div>
-      {/* Drop your existing Explore section component here */}
     </section>
   );
 }
