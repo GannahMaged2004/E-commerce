@@ -1,4 +1,5 @@
-export const API_BASE = process.env.NEXT_PUBLIC_API_BASE!;
+export const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
 function getToken() {
   if (typeof window === "undefined") return null;
@@ -23,7 +24,7 @@ export async function api<T>(
   if (opts.auth) {
     const token = getToken();
     if (token) {
-      (headers as any).Authorization = `Bearer ${token}`;
+      headers.Authorization = `Bearer ${token}`;
       (headers as any).token = token;
     }
   }
@@ -38,12 +39,10 @@ export async function api<T>(
     const message = json?.message || json?.errors?.msg || "Request failed";
     throw new Error(message);
   }
+
   return json as T;
 }
+
 export async function getProducts() {
-  const res = await fetch(`${API_BASE}/api/v1/products?limit=60&page=1&sort=-createdAt`);
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return res.json();
+  return api(`/api/v1/products?limit=60&page=1&sort=-createdAt`);
 }
