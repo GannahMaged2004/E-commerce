@@ -72,7 +72,7 @@ export default async function HomePage() {
             <h3 className="text-lg sm:text-xl font-semibold text-neutral-800">Flash Sales</h3>
           </div>
           <Link
-            href="/products"
+            href="/products/all"
             className="rounded bg-red-600 px-3 py-2 text-xs sm:text-sm text-white"
           >
             View All Products
@@ -111,7 +111,7 @@ export default async function HomePage() {
             </h3>
           </div>
           <Link
-            href="/products?sort=-ratingsAverage"
+            href="/products/all"
             className="rounded bg-red-600 px-3 py-2 text-xs sm:text-sm text-white"
           >
             View All
@@ -150,7 +150,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* EXPLORE */}
       <section className="container mx-auto px-3 sm:px-4 lg:px-6 mt-14 sm:mt-16">
         <div className="mb-4 sm:mb-5 flex items-center gap-3">
           <span className="inline-block h-6 w-1 rounded bg-red-600" />

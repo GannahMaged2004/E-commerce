@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { api } from "@/app/lib/api";
 export type Product = {
   _id: string;
   title: string;
@@ -17,6 +17,7 @@ type ListRes = {
   pagination?: { numberOfPages?: number };
 };
 
+// internal
 async function fetchProducts(qs: string) {
   const r = await api<ListRes>(`/api/v1/products${qs}`);
   return {
@@ -26,35 +27,13 @@ async function fetchProducts(qs: string) {
   };
 }
 
-export async function getProducts({
-  page = 1, limit = 12, keyword = "", category = "", sort = "-createdAt",
-}: { page?: number; limit?: number; keyword?: string; category?: string; sort?: string }) {
-  const qs = new URLSearchParams();
-  qs.set("page", String(page));
-  qs.set("limit", String(limit));
-  if (keyword)  qs.set("keyword", keyword);
-  if (category) qs.set("category", category);
-  if (sort)     qs.set("sort", sort);
-  return api<{ products: Product[]; results?: number; pagination?: { numberOfPages?: number } }>(
-    `/api/v1/products?${qs.toString()}`
-  );
-}
+export async function getProducts(params: { page?: number; limit?: number; keyword?: string; category?: string; sort?: string }) {
+  const { page = 1, limit = 12, keyword = "", category = "", sort = "-createdAt" } = params || {};
+  const sp = new URLSearchParams({ page: String(page), limit: String(limit), sort });
+  if (keyword) sp.set("keyword", keyword);
+  if (category) sp.set("category", category); 
 
-export async function getAllProducts() {
-  const first = await api<any>("/api/v1/products?limit=60&page=1&sort=-createdAt");
-  const firstBatch = (first?.data ?? first?.products ?? []) as Product[];
-  const totalPages =
-    first?.metadata?.numberOfPages ??
-    first?.pagination?.numberOfPages ??
-    1;
-  if (totalPages <= 1) return firstBatch;
-  const restPages = await Promise.all(
-    Array.from({ length: totalPages - 1 }, (_, i) =>
-      api<any>(`/api/v1/products?limit=60&page=${i + 2}&sort=-createdAt`)
-    )
-  );
-  const rest = restPages.flatMap((p) => (p?.data ?? p?.products ?? []) as Product[]);
-  return [...firstBatch, ...rest];
+  return fetchProducts(`?${sp.toString()}`);
 }
 
 

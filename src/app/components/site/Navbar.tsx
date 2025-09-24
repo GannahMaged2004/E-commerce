@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, FormEvent } from "react";
 import { removeAuth } from "@/app/lib/auth";
 
 const links = [
@@ -20,7 +20,7 @@ function isActive(pathname: string, href: string, match: "exact" | "startsWith")
   return p === h || p.startsWith(h + "/");
 }
 
-/* ===== Icons ===== */
+
 function IconHeart(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
@@ -63,12 +63,23 @@ function IconChevronDown(props: React.SVGProps<SVGSVGElement>) {
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
+
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [language, setLanguage] = useState("English");
   const [isAuthed, setIsAuthed] = useState(false);
 
-  // read token on mount + sync across tabs
+
+  const [q, setQ] = useState("");
+
+  const onSearch = (e: FormEvent) => {
+    e.preventDefault();
+    const term = q.trim();
+    router.push(term ? `/products?keyword=${encodeURIComponent(term)}` : "/products");
+    setOpen(false); 
+  };
+
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const read = () => setIsAuthed(!!localStorage.getItem("token"));
@@ -86,7 +97,6 @@ export default function Navbar() {
     router.push("/");
   };
 
-  // Decide account destination at click-time (always fresh)
   const handleAccountNav = () => {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     router.push(token ? "/account" : "/login");
@@ -132,7 +142,6 @@ export default function Navbar() {
             <Link href="#" className="underline text-neutral-0">ShopNow</Link>
           </p>
 
-
           <div className="relative hidden md:inline-block">
             <button
               className="inline-flex items-center gap-1"
@@ -165,15 +174,12 @@ export default function Navbar() {
         </div>
       </div>
 
-
       <div className="border-b border-neutral-100 bg-neutral-0">
         <div className="container flex h-16 items-center gap-6">
-         
           <Link href="/" className="text-xl font-semibold text-neutral-600">
             Exclusive
           </Link>
 
-   
           <nav className="mx-6 hidden items-center gap-6 lg:flex">
             {nav.map((l) => (
               <Link
@@ -187,11 +193,11 @@ export default function Navbar() {
             ))}
           </nav>
 
-
           <div className="ml-auto flex items-center gap-2 sm:gap-4">
-
-            <div className="relative hidden md:block">
+            <form onSubmit={onSearch} className="relative hidden md:block">
               <input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
                 className="h-10 w-[360px] rounded-md border border-neutral-200 bg-white pl-4 pr-10 text-sm text-neutral-600 placeholder:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-brand-300"
                 placeholder="What are you looking for?"
                 aria-label="Search"
@@ -199,12 +205,12 @@ export default function Navbar() {
               <button
                 aria-label="Search"
                 className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-neutral-400 hover:text-neutral-600"
+                type="submit"
               >
                 <IconSearch className="h-5 w-5" />
               </button>
-            </div>
+            </form>
 
-    
             <Link
               href="/wishlist"
               aria-label="Wishlist"
@@ -229,7 +235,6 @@ export default function Navbar() {
               <IconUser className="h-5 w-5" />
             </button>
 
-          
             {isAuthed && (
               <button
                 onClick={handleLogout}
@@ -240,7 +245,6 @@ export default function Navbar() {
               </button>
             )}
 
-    
             <button
               className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-neutral-200 lg:hidden"
               onClick={() => setOpen((v) => !v)}
@@ -266,13 +270,17 @@ export default function Navbar() {
                   {l.label}
                 </Link>
               ))}
-              <div className="mt-2">
+
+    
+              <form onSubmit={onSearch} className="mt-2">
                 <input
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
                   className="h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-600 placeholder:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-brand-300"
                   placeholder="What are you looking for?"
                   aria-label="Mobile search"
                 />
-              </div>
+              </form>
 
               {isAuthed && (
                 <button
