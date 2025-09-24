@@ -27,19 +27,21 @@ export default async function HomePage() {
 
       <section className="container mx-auto px-3 sm:px-4 lg:px-6 mt-6">
         <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-[260px,1fr]">
-          <aside className="hidden lg:block rounded-md border border-neutral-100 bg-white p-3">
-            <ul className="space-y-3 text-sm text-neutral-600">
-              <li>Women’s Fashion  </li>
-              <li>Men’s Fashion  </li>
-              <li>Electronics</li>
-              <li>Home & Lifestyle</li>
-              <li>Medicine</li>
-              <li>Sports & Outdoor</li>
-              <li>Baby’s & Toys</li>
-              <li>Groceries & Pets</li>
-              <li>Health & Beauty</li>
-            </ul>
-          </aside>
+         <aside className="hidden lg:block rounded-md border border-neutral-100 bg-white p-3">
+          <ul className="space-y-3 text-sm text-neutral-600">
+          {cats.map((c) => (
+          <li key={c._id}>
+          <Link
+          href={`/products?category=${encodeURIComponent(c._id)}`}
+          className="hover:text-neutral-800"
+          >
+          {c.name}
+          </Link>
+        </li>
+        ))}
+        </ul>
+        </aside>
+
 
           <div className="relative overflow-hidden rounded-md border border-neutral-100 bg-black p-5 sm:p-6 text-white">
             <div className="text-xs sm:text-sm text-white/70">iPhone 14 Series</div>

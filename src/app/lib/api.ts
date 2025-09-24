@@ -40,3 +40,10 @@ export async function api<T>(
   }
   return json as T;
 }
+export async function getProducts() {
+  const res = await fetch(`${API_BASE}/api/v1/products?limit=60&page=1&sort=-createdAt`);
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  return res.json();
+}
